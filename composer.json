@@ -13,8 +13,6 @@
     "require": {
         "yiisoft/yii2": "*"
     },
-	"prefer-stable": true,
-    "minimum-stability": "dev-master",
     "autoload": {
         "psr-4": {
             "noetikosgroup\\smsbat\\": ""
