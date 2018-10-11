@@ -1,0 +1,21 @@
+{
+    "name": "noetikosgroup/yii2-smsbat",
+    "description": "Yii2 smsbat",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","helpers","smsbat","sms"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Noetikos Group",
+            "email": "support@noetikos.com.ua"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "noetikosgroup\\smsbat\\": ""
+        }
+    }
+}
