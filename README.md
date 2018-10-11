@@ -2,6 +2,11 @@ Yii2 SmsBat extension
 =============
 Yii2 sends SMS from smsbat.com via HTTP protocol
 
+Requirements
+------------
+* PHP >=5.4.0
+* Installed Yii2 framework (https://www.yiiframework.com/download)
+
 Installation
 ------------
 
