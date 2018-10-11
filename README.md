@@ -54,7 +54,6 @@ Add the following code in your config file ('components' section):
 If you want to save messages in the database - change config:
 ```php
 <?php
-<?php
 ...
     'components' => [
         'smsbat' => [
