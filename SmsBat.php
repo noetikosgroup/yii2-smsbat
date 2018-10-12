@@ -8,7 +8,7 @@ use noetikosgroup\smsbat\models\SmsBatMessage;
 
 /**
  * @author Noetikos Group <support@noetikos.com.ua>
- * @version 0.1
+ * @version 0.2
  */
 class SmsBat extends Component
 {
@@ -52,9 +52,10 @@ class SmsBat extends Component
     /**
      * Sends SMS
      *
-     * @param $to
-     * @param $message
+     * @param string $to
+     * @param string $message
      * @return bool
+     * @throws InvalidConfigException
      */
     public function send($to, $message)
     {
@@ -74,8 +75,11 @@ class SmsBat extends Component
             );
             $result = curl_exec($this->ch);
             $this->disconnect();
-
-            return $result;
+            if ($result) {
+                $this->saveToDb($to, $message, $result);
+                return true;
+            } else
+                throw new InvalidConfigException('Failed to perform a cURL session');
         } else
             return false;
     }
@@ -107,5 +111,96 @@ class SmsBat extends Component
     protected function disconnect()
     {
         curl_close($this->ch);
+        $this->ch = null;
+    }
+
+    /**
+     * Saves the message to the database
+     *
+     * @param string $phone
+     * @param string $text
+     * @param string $message
+     *
+     * @return bool
+     */
+    public function saveToDb($phone, $text, $message)
+    {
+        if (!$this->saveToDb) {
+            return false;
+        }
+        $result = explode("\n", trim($message));
+        $messageId = explode(':', $result[0]);
+
+        $model = new SmsBatMessage();
+        $model->text = $text;
+        $model->phone = $phone;
+        $model->status = $this->getMessageStatus($messageId[1]);
+        $model->message_id = $messageId[1];
+
+        return $model->save();
+    }
+
+    /**
+     * Gets user balance
+     *
+     * @return string|bool
+     */
+    public function getBalance()
+    {
+        if ($this->connect()) {
+            curl_setopt(
+                $this->ch,
+                CURLOPT_POSTFIELDS,
+                [
+                    'version' => $this->version,
+                    'login' => $this->login,
+                    'password' => $this->password,
+                    'command' => 'balance'
+                ]
+            );
+            $result = curl_exec($this->ch);
+            $this->disconnect();
+
+            if ($result)
+                return $result;
+            else
+                throw new InvalidConfigException('Failed to initialize a cURL session');
+        } else
+            return false;
+    }
+
+    /**
+     * Gets message status
+     *
+     * @param string $messageId
+     * @return string|bool
+     * @throws InvalidConfigException
+     */
+    public function getMessageStatus($messageId)
+    {
+        if ($this->connect()) {
+            curl_setopt(
+                $this->ch,
+                CURLOPT_POSTFIELDS,
+                [
+                    'version' => $this->version,
+                    'login' => $this->login,
+                    'password' => $this->password,
+                    'command' => 'receive',
+                    'id' => $messageId
+                ]
+            );
+            $result = curl_exec($this->ch);
+            $this->disconnect();
+
+            if ($result) {
+                $result = explode("\n", trim($result));
+                $messageStatus = explode(':', $result[1]);
+
+                return $messageStatus[1];
+            } else
+                throw new InvalidConfigException('Failed to initialize a cURL session');
+        } else
+            return false;
     }
 }
