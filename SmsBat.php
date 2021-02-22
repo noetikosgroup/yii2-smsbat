@@ -8,7 +8,7 @@ use noetikosgroup\smsbat\models\SmsBatMessage;
 
 /**
  * @author Noetikos Group <support@noetikos.com.ua>
- * @version 0.2
+ * @version 0.3
  */
 class SmsBat extends Component
 {
@@ -37,7 +37,7 @@ class SmsBat extends Component
     /**
      * @var string
      */
-    private $url = "https://smsbat.com/api/http.php";
+    private $url = "https://api.smsbat.com.ua/alphasmshttp";
 
     /**
      * @var string
