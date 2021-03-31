@@ -8,7 +8,7 @@ use noetikosgroup\smsbat\models\SmsBatMessage;
 
 /**
  * @author Noetikos Group <support@noetikos.com.ua>
- * @version 0.3
+ * @version 0.4
  */
 class SmsBat extends Component
 {
@@ -195,7 +195,7 @@ class SmsBat extends Component
 
             if ($result) {
                 $result = explode("\n", trim($result));
-                $messageStatus = explode(':', $result[1]);
+                $messageStatus = explode(':', $result[0]);
 
                 return $messageStatus[1];
             } else
